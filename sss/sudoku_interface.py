@@ -1,5 +1,6 @@
 """In this module is code for interface and all it's functions"""
 from tkinter import Entry, Tk, Label, Button, END
+from scraping import sudoku
 
 root = Tk()
 root.title("Sudoku")
@@ -30,7 +31,18 @@ def draw9x9():
             cells[(i, j)] = entry
 
 
+def fill_the_fields(puzzle):
+    """Function fills the board with the result of scraping"""
+    for i in range(9):
+        for j in range(9):
+            if puzzle[i][j] != 0:
+                cells[(i, j)].delete(0, END)
+                cells[(i, j)].insert(0, puzzle[i][j])
+                cells[(i, j)].configure(state="disabled")
+
+
 draw9x9()
+fill_the_fields(sudoku)
 
 clear_button = Button(text="Clear", width=10,
                       command=lambda: write_number("del"))
