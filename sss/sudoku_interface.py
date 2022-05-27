@@ -1,6 +1,6 @@
 """In this module is code for interface and all it's functions"""
 from tkinter import Entry, Tk, Label, Button, END
-from scraping import sudoku
+from scraping import sudoku, solved
 
 root = Tk()
 root.title("Sudoku")
@@ -48,7 +48,15 @@ clear_button = Button(text="Clear", width=10,
                       command=lambda: write_number("del"))
 clear_button.grid(row=15, column=1, columnspan=5, pady=20)
 
-solve_button = Button(text="Solve", width=10)
+
+def write_automatic_solution():
+    "Function writes the solution in the text file"
+    with open("db\\automatic_result_time.txt", "w", encoding="utf-8") as file:
+        for i in range(9):
+            file.write(str(solved[i]) + "\n")
+
+
+solve_button = Button(text="Solve", width=10, command=write_automatic_solution)
 solve_button.grid(row=15, column=5, columnspan=5, pady=20)
 
 
