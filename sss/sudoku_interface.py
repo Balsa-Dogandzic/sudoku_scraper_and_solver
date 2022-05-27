@@ -83,8 +83,9 @@ def write_number(argument):
         if argument != "del":
             focused_entry.insert(0, argument)
         check_input()
+        game_title.configure(text="Fill in the fields with right numbers.")
     except AttributeError:
-        print("Zero fields are focused")
+        game_title.configure(text="Focus the field first")
 
 
 def show_btns():
