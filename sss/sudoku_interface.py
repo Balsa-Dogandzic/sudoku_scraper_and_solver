@@ -12,7 +12,8 @@ game_title.grid(row=0, column=1, columnspan=10, pady=5)
 
 def validate(key_input):
     """Check if user input is a number with one digit"""
-    out = (key_input.isdigit() or key_input == "") and len(key_input) < 2
+    out = (key_input.isdigit() or key_input == "") and len(
+        key_input) < 2 and key_input != 0
     return out
 
 
@@ -26,6 +27,7 @@ def draw9x9():
         for j in range(9):
             entry = Entry(root, width=5, bg="#D0ffff", justify="center", validate="key",
                           validatecommand=(rule, "%P"))
+            entry.bind("<KeyRelease>", lambda event: check_input())
             entry.grid(row=i + 1, column=j + 1,
                        sticky="nsew", padx=1, pady=1, ipady=5)
             cells[(i, j)] = entry
@@ -60,12 +62,29 @@ solve_button = Button(text="Solve", width=10, command=write_automatic_solution)
 solve_button.grid(row=15, column=5, columnspan=5, pady=20)
 
 
+def check_input():
+    """Checks if input number is equal to the one in solved puzzle"""
+    for i in range(9):
+        for j in range(9):
+            if cells[(i, j)] != 0:
+                if '1' <= cells[(i, j)].get() <= '9':
+                    sudoku[i][j] = int(cells[(i, j)].get())
+                    if sudoku[i][j] != solved[i][j]:
+                        cells[(i, j)].configure(bg="#FF7659")
+                    else:
+                        cells[(i, j)].configure(bg="#D0ffff")
+
+
 def write_number(argument):
     """Functions enables buttons to write numbers on the board"""
-    focused_entry = root.focus_get()
-    focused_entry.delete(0, END)
-    if argument != "del":
-        focused_entry.insert(0, argument)
+    try:
+        focused_entry = root.focus_get()
+        focused_entry.delete(0, END)
+        if argument != "del":
+            focused_entry.insert(0, argument)
+        check_input()
+    except AttributeError:
+        print("Zero fields are focused")
 
 
 def show_btns():
