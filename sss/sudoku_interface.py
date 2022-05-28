@@ -4,6 +4,7 @@ from scraping import sudoku, solved
 
 root = Tk()
 root.title("Sudoku")
+root.iconbitmap("static\\sudoku_picture.ico")
 root.resizable(False, False)
 
 game_title = Label(root, text="Fill in the fields with right numbers.")
@@ -73,6 +74,8 @@ def check_input():
                         cells[(i, j)].configure(bg="#FF7659")
                     else:
                         cells[(i, j)].configure(bg="#D0ffff")
+    if endgame():
+        print("endgame")
 
 
 def write_number(argument):
@@ -105,6 +108,16 @@ def show_btns():
     buttons[6].configure(command=lambda: write_number(7))
     buttons[7].configure(command=lambda: write_number(8))
     buttons[8].configure(command=lambda: write_number(9))
+
+
+def endgame():
+    """Checks if all the fields are correctly filled"""
+    for i in range(9):
+        for j in range(9):
+            if sudoku[i][j] != solved[i][j]:
+                return False
+
+    return True
 
 
 show_btns()
