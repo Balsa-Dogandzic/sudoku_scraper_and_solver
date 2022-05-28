@@ -1,5 +1,7 @@
 """In this module is code for interface and all it's functions"""
-from tkinter import Entry, Tk, Label, Button, END
+from datetime import datetime
+from tkinter import Button, Label, Entry, Tk, END, messagebox
+from tkinter.simpledialog import askstring
 from scraping import sudoku, solved
 
 root = Tk()
@@ -54,9 +56,11 @@ clear_button.grid(row=15, column=1, columnspan=5, pady=20)
 
 def write_automatic_solution():
     "Function writes the solution in the text file"
-    with open("db\\automatic_result_time.txt", "w", encoding="utf-8") as file:
+    time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    with open(f"db\\automatic_result_{time}.txt", "w", encoding="utf-8") as file:
         for i in range(9):
             file.write(str(solved[i]) + "\n")
+    messagebox.showinfo("Solution", "Your solution is in \"db\" folder.")
 
 
 solve_button = Button(text="Solve", width=10, command=write_automatic_solution)
@@ -75,7 +79,9 @@ def check_input():
                     else:
                         cells[(i, j)].configure(bg="#D0ffff")
     if endgame():
-        print("endgame")
+        winner = askstring("You won!", "Please enter your name.\n")
+        write_winner_solution(winner)
+        root.destroy()
 
 
 def write_number(argument):
@@ -108,6 +114,19 @@ def show_btns():
     buttons[6].configure(command=lambda: write_number(7))
     buttons[7].configure(command=lambda: write_number(8))
     buttons[8].configure(command=lambda: write_number(9))
+
+
+def write_winner_solution(name):
+    """Function writes the solution in a file at the end of the game"""
+    time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    if name != "":
+        with open(f"db\\{name}_{time}.txt", "w", encoding="utf-8") as file:
+            for i in range(9):
+                file.write(str(solved[i]) + "\n")
+    else:
+        with open(f"db\\unknown_{time}.txt", "w", encoding="utf-8") as file:
+            for i in range(9):
+                file.write(str(solved[i]) + "\n")
 
 
 def endgame():
